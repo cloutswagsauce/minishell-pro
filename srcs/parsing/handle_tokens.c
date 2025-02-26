@@ -3,76 +3,131 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:32:16 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/25 20:32:18 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/26 18:28:11 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	token_dispatcher(t_com **commands, t_com **current_cmd, t_token **tokens,
-		int *arg_count)
-{
-	int		ret;
-	t_token	*current;
 
-	current = *tokens;
-	ret = 0;
-	if (current->type == TOKEN_WORD || current->type == TOKEN_SQUOTES
-		|| current->type == TOKEN_DQUOTES)
-	{
-		handle_word_tokens(commands, current_cmd, current, arg_count);
-		*tokens = current->next;
-	}
-	else if (current->type == TOKEN_PIPE)
-	{
-		ret = handle_pipe_token(current_cmd, arg_count);
-		if (ret)  // If pipe token handling failed
-		{
-			if (*commands)
-				free_commands(*commands);
-			free_tokens(*tokens);
-			*commands = NULL;
-			*tokens = NULL;
-			return (ret);
-		}
-		*tokens = current->next;
-		// Check if there's no token after pipe
-		if (!*tokens)
-		{
-			if (*commands)
-				free_commands(*commands);
-			ft_printf("syntax error near unexpected token `|'\n");
-			store_exit_status(2);
-			return (1);
-		}
-	}
-	else if (current->type == TOKEN_REDIRECT_OUT || current->type == TOKEN_APPEND)
-	{
-		// Create empty command if none exists
-		if (!*current_cmd)
-		{
-			create_new_command(current_cmd, arg_count, current);
-			if (!*commands)
-				*commands = *current_cmd;
-		}
-		ret = handle_redirect_token(*current_cmd, tokens, 
-			(current->type == TOKEN_APPEND));
-	}
-	else if (current->type == TOKEN_HEREDOC)
-	{
-		if (!*current_cmd)
-		{
-			create_new_command(current_cmd, arg_count, current);
-			if (!*commands)
-				*commands = *current_cmd;
-		}
-		handle_heredoc_token(*current_cmd, current);
-		*tokens = current->next;
-	}
-	return (ret);
+int handle_word_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count)
+{
+    t_token *current;
+    t_token *to_free;
+    int ret;
+
+    current = *tokens;
+    ret = 0;
+    handle_word_tokens(commands, current_cmd, current, arg_count);
+    to_free = current;
+    *tokens = current->next;
+    free_single_token(to_free);
+    return (ret);
+}
+int handle_pipe_syntax_error(t_com **commands)
+{
+    int ret;
+
+    ret = 1;
+    if (*commands)
+        free_commands(*commands);
+    ft_printf("syntadddx error near unexpected token `|'\n");
+    store_exit_status(2);
+    return (ret);
+}
+
+int handle_pipe_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count)
+{
+    t_token *current;
+    t_token *to_free;
+    int ret;
+
+    current = *tokens;
+    ret = handle_pipe_token(current_cmd, arg_count);
+    if (ret)
+    {
+        if (*commands)
+            free_commands(*commands);
+        free_tokens(*tokens);
+        *commands = NULL;
+        *tokens = NULL;
+        return (ret);
+    }
+    to_free = current;
+    *tokens = current->next;
+    free_single_token(to_free);
+    if (!*tokens)
+        return (handle_pipe_syntax_error(commands));
+    return (ret);
+}
+
+
+
+int handle_redirect_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count)
+{
+    t_token *current;
+    t_token *to_free;
+    int ret;
+
+    current = *tokens;
+    ret = 0;
+    if (!*current_cmd)
+    {
+        create_new_command(current_cmd, arg_count, current);
+        if (!*commands)
+            *commands = *current_cmd;
+    }
+    ret = handle_redirect_token(*current_cmd, tokens, (current->type == TOKEN_APPEND));
+    if (!ret)
+    {
+        to_free = current;
+        free_single_token(to_free);
+    }
+    return (ret);
+}
+
+int handle_heredoc_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count)
+{
+    t_token *current;
+    t_token *to_free;
+    int ret;
+
+    current = *tokens;
+    ret = 0;
+    if (!*current_cmd)
+    {
+        create_new_command(current_cmd, arg_count, current);
+        if (!*commands)
+            *commands = *current_cmd;
+    }
+    handle_heredoc_token(*current_cmd, current);
+    to_free = current;
+    *tokens = current->next;
+    free_single_token(to_free);
+    return (ret);
+}
+
+int token_dispatcher(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count)
+{
+    t_token *current;
+    int ret;
+
+    current = *tokens;
+    ret = 0;
+    if (!current)
+        return (0);
+    if (current->type == TOKEN_WORD || current->type == TOKEN_SQUOTES || current->type == TOKEN_DQUOTES)
+        ret = handle_word_case(commands, current_cmd, tokens, arg_count);
+    else if (current->type == TOKEN_PIPE)
+        ret = handle_pipe_case(commands, current_cmd, tokens, arg_count);
+    else if (current->type == TOKEN_REDIRECT_OUT || current->type == TOKEN_APPEND)
+        ret = handle_redirect_case(commands, current_cmd, tokens, arg_count);
+    else if (current->type == TOKEN_HEREDOC)
+        ret = handle_heredoc_case(commands, current_cmd, tokens, arg_count);
+    return (ret);
 }
 
 int	init_new_pipe_cmd(t_com *new_cmd)
@@ -91,7 +146,7 @@ int	handle_pipe_token(t_com **current_cmd, int *arg_count)
 	// Check if there's no command before the pipe
 	if (!*current_cmd || !(*current_cmd)->argv || !(*current_cmd)->argv[0])
 	{
-		ft_printf("syntax error near unexpected token `|'\n");
+		ft_printf("syntaxxxx error near unexpected token `|'\n");
 		store_exit_status(2);
 		return (1);
 	}

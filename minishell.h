@@ -6,7 +6,7 @@
 /*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 09:53:11 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/25 17:01:37 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:05:47 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,9 @@ int					join_word_token(char *input, int *i, t_token **tokens, t_token *last);
 int					process_operator(char *input, int *i, t_token **tokens, char **buf);
 int					process_quoted_string(char *input, int *i, t_token **tokens, char **buf);
 void				handle_word_tokens(t_com **commands, t_com **current_cmd, t_token *tokens, int *arg_count);
-
+void				handle_pipe(char *input, int *i, t_token **tokens);
+int					is_operator_start(char *input, int *i);
+void				error_token_parsing(t_token **tokens);
 
 
 

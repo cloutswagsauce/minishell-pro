@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:59:34 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/26 11:28:49 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:24:46 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../../minishell.h"
 
@@ -18,16 +18,14 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 	char	**current_path_split;
 	int		len;
 	char	*expanded_cmd;
+	t_list *vars;
 
-	// First check if command starts with $ and try to expand it
 	if (command->argv[0] && command->argv[0][0] == '$')
 	{
-		// Try to get from environment
 		expanded_cmd = getenv(command->argv[0] + 1);
 		if (!expanded_cmd)
 		{
-			// Try to get from local vars
-			t_list *vars = data->local_env;
+			vars = data->local_env;
 			while (vars)
 			{
 				if (!ft_memcmp(command->argv[0] + 1, vars->name, ft_strlen(vars->name)))
@@ -150,11 +148,12 @@ t_com	*parse_input(char *str)
 	arg_count = 0;
 	while (cur_token)
 	{
+		printf("treating token: %s\n", cur_token->value);
 		if (token_dispatcher(&commands, &current_cmd, &cur_token, &arg_count))
 			return (0);
 	}
 	if (current_cmd)
 		current_cmd->is_builtin = is_command_builtin(current_cmd);
-	free_tokens(tokens);
+	//free_tokens(tokens);
 	return (commands);
 }

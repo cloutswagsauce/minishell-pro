@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_extras.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:34:31 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/25 20:36:31 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/26 19:03:25 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,11 @@ void	add_token(t_token **tokens, char *value, int type, int take_ownership)
 	}
 }
 
-// Free a single token (helper)
 void	free_single_token(t_token *token)
 {
 	if (token)
 	{
-		free(token->value); // Safe if NULL
+		free(token->value);
 		free(token);
 	}
 }
