@@ -30,11 +30,20 @@ int	token_dispatcher(t_com **commands, t_com **current_cmd, t_token **tokens,
 	{
 		ret = handle_pipe_token(current_cmd, arg_count);
 		if (ret)  // If pipe token handling failed
+		{
+			if (*commands)
+				free_commands(*commands);
+			free_tokens(*tokens);
+			*commands = NULL;
+			*tokens = NULL;
 			return (ret);
+		}
 		*tokens = current->next;
 		// Check if there's no token after pipe
 		if (!*tokens)
 		{
+			if (*commands)
+				free_commands(*commands);
 			ft_printf("syntax error near unexpected token `|'\n");
 			store_exit_status(2);
 			return (1);
