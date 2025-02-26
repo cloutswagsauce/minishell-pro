@@ -1,43 +1,67 @@
 #include "../../minishell.h"
 
+/*void for_each_item(t_list *tmp, int i, char **envp)
+{
+    size_t len;
+
+    int i;
+    i = 0;
+    while (tmp)
+    {
+        len = ft_strlen(tmp->name) + ft_strlen(tmp->value) + 2; 
+        envp[i] = malloc(len);
+        if (!envp[i])
+        {
+            while (i > 0)
+                free(envp[--i]);
+            free(envp);
+            return (NULL);
+        }
+        ft_strlcpy(envp[i], tmp->name, len);          
+        ft_strlcat(envp[i], "=", len);               
+        ft_strlcat(envp[i], tmp->value, len);        
+        tmp = tmp->next;
+        i++;
+    }
+}*/
+
 
 char **env_list_to_envp(t_list *env_list)
 {
-    int count = 0;
-    t_list *tmp = env_list;
+    int count;
+    t_list *tmp;
 	char **envp;
+    size_t len;
+
+    
+
+    count = 0;
+    tmp = env_list;
 
     while (tmp)
     {
         count++;
         tmp = tmp->next;
     }
-
-    // Allocate memory for the char ** array (+1 for NULL terminator)
     envp = malloc(sizeof(char *) * (count + 1));
     if (!envp)
-        return (NULL); // Handle allocation failure
-
-    // Fill the array with "name=value" strings
+        return (NULL);
     tmp = env_list;
     int i = 0;
     while (tmp)
     {
-        // Calculate the length needed for "name=value"
-        size_t len = ft_strlen(tmp->name) + ft_strlen(tmp->value) + 2; // +1 for '=', +1 for '\0'
+        len = ft_strlen(tmp->name) + ft_strlen(tmp->value) + 2; 
         envp[i] = malloc(len);
         if (!envp[i])
         {
-            // Free previously allocated strings and the array if allocation fails
             while (i > 0)
                 free(envp[--i]);
             free(envp);
             return (NULL);
         }
-        // Manually construct "name=value" using ft_strlcpy and ft_strlcat
-        ft_strlcpy(envp[i], tmp->name, len);          // Copy name
-        ft_strlcat(envp[i], "=", len);               // Append '='
-        ft_strlcat(envp[i], tmp->value, len);        // Append value
+        ft_strlcpy(envp[i], tmp->name, len);          
+        ft_strlcat(envp[i], "=", len);               
+        ft_strlcat(envp[i], tmp->value, len);        
         tmp = tmp->next;
         i++;
     }
