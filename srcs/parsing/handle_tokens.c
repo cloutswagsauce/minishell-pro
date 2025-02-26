@@ -28,9 +28,17 @@ int	token_dispatcher(t_com **commands, t_com **current_cmd, t_token **tokens,
 	}
 	else if (current->type == TOKEN_PIPE)
 	{
-		if (*current_cmd)
-			ret = handle_pipe_token(current_cmd, arg_count);
+		ret = handle_pipe_token(current_cmd, arg_count);
+		if (ret)  // If pipe token handling failed
+			return (ret);
 		*tokens = current->next;
+		// Check if there's no token after pipe
+		if (!*tokens)
+		{
+			ft_printf("syntax error near unexpected token `|'\n");
+			store_exit_status(2);
+			return (1);
+		}
 	}
 	else if (current->type == TOKEN_REDIRECT_OUT || current->type == TOKEN_APPEND)
 	{
@@ -71,12 +79,14 @@ int	handle_pipe_token(t_com **current_cmd, int *arg_count)
 {
 	t_com	*new_cmd;
 
-	if (!*current_cmd)
+	// Check if there's no command before the pipe
+	if (!*current_cmd || !(*current_cmd)->argv || !(*current_cmd)->argv[0])
 	{
-		ft_printf("unexpected syntax\n");
-		store_exit_status(1);
+		ft_printf("syntax error near unexpected token `|'\n");
+		store_exit_status(2);
 		return (1);
 	}
+
 	(*current_cmd)->has_outpipe = 1;
 	new_cmd = malloc(sizeof(t_com));
 	if (!new_cmd)

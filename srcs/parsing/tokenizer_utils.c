@@ -14,7 +14,11 @@
 
 int	is_operator_start(char *input, int *i)
 {
-	return (*i == 0 || isspace((char)input[*i - 1]));
+	return (*i == 0 || 
+			isspace((char)input[*i - 1]) || 
+			input[*i] == '|' || 
+			input[*i] == '<' || 
+			input[*i] == '>');
 }
 
 void	handle_pipe(char *input, int *i, t_token **tokens)
@@ -144,3 +148,15 @@ void	handle_non_operator(char *input, int *i, t_token **tokens)
 	if (word)
 		add_token(tokens, word, TOKEN_WORD, 1);
 }
+
+/*void	handle_operators(char *input, int *i, t_token **tokens)
+{
+	if (input[*i] == '|')
+		handle_pipe(input, i, tokens);
+	else if (input[*i] == '<')
+		handle_redirect_it(input, i, tokens);
+	else if (input[*i] == '>')
+		handle_redirect_ot(input, i, tokens);
+	else
+		handle_non_operator(input, i, tokens);
+}*/
