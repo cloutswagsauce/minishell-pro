@@ -5,12 +5,20 @@ char *handle_input(void)
     char *input;
 
     if (isatty(STDIN_FILENO))
+    {
         signal_handler_interactive();
+        input = readline("mini$hell 🤖: ");
+    }
     else
+    {
         signal_handler_non_interactive();
-    rl_on_new_line();
-    input = readline("mini$hell 🤖: ");
-    return (input);
+        input = readline("");
+    }
+    
+    if (!input)  // Handle Ctrl+D
+        return NULL;
+        
+    return input;
 }
 
 void execute_input(char *input, t_com **commands, t_data *data)
@@ -22,7 +30,6 @@ void execute_input(char *input, t_com **commands, t_data *data)
             execute_pipeline(*commands, data);
         else if (*commands)
             execute_process(*commands, data);
-        wait(0);
         finish_execution(*commands, input, data);
     }
     else

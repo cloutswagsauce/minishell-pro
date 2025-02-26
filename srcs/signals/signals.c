@@ -30,6 +30,9 @@ void	signal_handler_non_interactive(void)
 	ft_memset(&act, 0, sizeof(act));
 	act.sa_handler = &handle_non_interactive;
 	sigaction(SIGINT, &act, NULL);
+	
+	// Allow SIGQUIT to be handled by child processes
+	act.sa_handler = SIG_DFL;
 	sigaction(SIGQUIT, &act, NULL);
 }
 

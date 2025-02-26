@@ -12,9 +12,8 @@
  void	handle_non_interactive(int sig)
 {
 	g_exit_status = sig + 128;
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (sig == SIGINT)
+		write(1, "\n", 1);
 }
 
  void	ignore_sigquit(void)

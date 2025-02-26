@@ -22,11 +22,17 @@ void	handle_pipe(char *input, int *i, t_token **tokens)
 	t_token	*pipe_token;
 	t_token	*temp;
 
+	// Check for multiple consecutive pipes
+	if (input[*i + 1] == '|')
+	{
+		printf("syntax error near unexpected token `|'\n");
+		store_exit_status(2);
+		*tokens = NULL;  // Clear tokens to abort parsing
+		return;
+	}
 	pipe_token = new_token("|", TOKEN_PIPE, 0);
-	(void)input;
 	if (pipe_token)
 	{
-		// Add to list temporarily for dispatching
 		if (!*tokens)
 			*tokens = pipe_token;
 		else
@@ -47,11 +53,27 @@ void	handle_redirect_it(char *input, int *i, t_token **tokens)
 
 	if (input[*i + 1] == '<')
 	{
+		// Check for more than two consecutive '<'
+		if (input[*i + 2] == '<')
+		{
+			printf("syntax error near unexpected token `<'\n");
+			store_exit_status(2);
+			*tokens = NULL;  // Clear tokens to abort parsing
+			return;
+		}
 		token = new_token("<<", TOKEN_HEREDOC, 0);
 		(*i) += 2;
 	}
 	else
 	{
+		// Check for single '<' followed by '<'
+		if (input[*i + 1] == '<')
+		{
+			printf("syntax error near unexpected token `<'\n");
+			store_exit_status(2);
+			*tokens = NULL;  // Clear tokens to abort parsing
+			return;
+		}
 		token = new_token("<", TOKEN_REDIRECT_IN, 0);
 		(*i)++;
 	}
@@ -79,6 +101,7 @@ void	handle_redirect_ot(char *input, int *i, t_token **tokens)
 		// Check for more than two consecutive '>'
 		if (input[*i + 2] == '>')
 		{
+			
 			printf("syntax error near unexpected token `>'\n");
 			store_exit_status(2);
 			*tokens = NULL; 

@@ -36,37 +36,56 @@ void	store_exit_status(int status)
 }
 void handle_child(t_com *cmd, t_data *data)
 {
+	// Reset signal handlers for child process
+	signal(SIGINT, SIG_DFL);   // Reset SIGINT to default
+	signal(SIGQUIT, SIG_DFL);  // Reset SIGQUIT to default
+
 	if (cmd->delim)
-			{
-				if (handle_redirect_heredoc(cmd) != 0)
-					exit(130);  // Exit if heredoc was interrupted
-			}
-			if (cmd->output_file)
-				handle_redirect_out(cmd);
-			if (cmd->argv[0][0] == '/')
-				handle_absolute(cmd, data);
-			call_child_action(*cmd, data);
-	
+	{
+		if (handle_redirect_heredoc(cmd) != 0)
+			exit(130);  // Exit if heredoc was interrupted
+	}
+	if (cmd->output_file)
+		handle_redirect_out(cmd);
+	if (cmd->argv[0][0] == '/')
+		handle_absolute(cmd, data);
+	call_child_action(*cmd, data);
 }
 void	execute_process(t_com *cmd, t_data *data)
 {
 	pid_t	pid;
+	int		status;
 
 	if (!cmd->is_builtin)
 	{
+		signal(SIGINT, SIG_IGN);  // Ignore SIGINT in parent
+		signal(SIGQUIT, SIG_IGN); // Ignore SIGQUIT in parent
+		
 		pid = fork();
 		if (pid == 0)
 			handle_child(cmd, data);
 		else if (pid > 0)
 		{
-			waitpid(pid, &g_exit_status, 0);
-			store_exit_status(g_exit_status);
-			if (WIFEXITED(g_exit_status) && WEXITSTATUS(g_exit_status) == 130)
+			waitpid(pid, &status, 0);
+			if (WIFSIGNALED(status))
 			{
-				rl_on_new_line();
-				rl_replace_line("", 0);
-				rl_redisplay();
+				if (WTERMSIG(status) == SIGQUIT)
+				{
+					ft_putstr_fd("Quit\n", 2);
+					g_exit_status = 131;
+				}
+				else if (WTERMSIG(status) == SIGINT)
+				{
+					ft_putchar_fd('\n', 2);
+					g_exit_status = 130;
+				}
 			}
+			else
+				store_exit_status(status);
+				
+			// Reset signal handlers for interactive mode
+			if (isatty(STDIN_FILENO))
+				signal_handler_interactive();
 		}
 	}
 	else
