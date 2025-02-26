@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:59:34 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/25 20:34:24 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/26 11:28:49 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../../minishell.h"
 
@@ -58,6 +58,11 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 		current_path_split++;
 	}
 	free_double(path_split);
+	if (!ft_strncmp(command->argv[0], ">>", ft_strlen(command->argv[0])) || !ft_strncmp(command->argv[0], ">", ft_strlen(command->argv[0])))
+	{
+		store_exit_status(0);
+		return ;
+	}
 	ft_putstr_fd("Command not found: ", 2);
 	ft_putendl_fd(command->argv[0], 2);
 	store_exit_status(127);
