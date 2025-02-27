@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirect.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 17:18:05 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/25 19:26:34 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/26 21:38:17 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int	handle_redirect_out(t_com *cmd)
 {
 	int	fd;
+
 	if (!cmd)
 	{
 		printf("hi");
 	}
-
 	if (cmd->delim)
 		return (handle_redirect_heredoc(cmd));
 	if (cmd->append_output)
@@ -46,7 +46,6 @@ void	run_heredoc_child(int pipe_fd[2], t_com *cmd)
 {
 	char	*line;
 
-	
 	close(pipe_fd[0]);
 	while (1)
 	{

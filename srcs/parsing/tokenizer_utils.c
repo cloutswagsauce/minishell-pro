@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:34:39 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/26 19:04:45 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 01:25:15 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-
-
 
 t_token	*create_redirect_it_token(char *input, int *i, t_token **tokens)
 {
@@ -25,7 +22,7 @@ t_token	*create_redirect_it_token(char *input, int *i, t_token **tokens)
 		if (input[*i + 2] == '<')
 		{
 			error_token_parsing(tokens);
-			return NULL;
+			return (NULL);
 		}
 		token = new_token("<<", TOKEN_HEREDOC, 0);
 		(*i) += 2;
@@ -71,34 +68,23 @@ void	handle_redirect_it(char *input, int *i, t_token **tokens)
 void	handle_redirect_ot(char *input, int *i, t_token **tokens)
 {
 	t_token	*token;
-	t_token	*temp;
 
 	if (input[*i + 1] == '>')
 	{
 		if (input[*i + 2] == '>')
-			return error_token_parsing(tokens);
+			return (error_token_parsing(tokens));
 		token = new_token(">>", TOKEN_APPEND, 0);
 		(*i) += 2;
 	}
 	else
 	{
-		if (input[*i + 1] == '>')
-			return error_token_parsing(tokens);
 		token = new_token(">", TOKEN_REDIRECT_OUT, 0);
 		(*i)++;
 	}
-	if (token)
-	{
-		if (!*tokens)
-			*tokens = token;
-		else
-		{
-			temp = *tokens;
-			while (temp->next)
-				temp = temp->next;
-			temp->next = token;
-		}
-	}
+	if (token && !*tokens)
+		*tokens = token;
+	else if (token && *tokens)
+		append_token_to_list(tokens, token);
 }
 
 void	handle_non_operator(char *input, int *i, t_token **tokens)

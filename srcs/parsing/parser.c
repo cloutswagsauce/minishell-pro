@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:59:34 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/26 18:24:46 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 01:51:20 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 	char	**current_path_split;
 	int		len;
 	char	*expanded_cmd;
-	t_list *vars;
+	t_list	*vars;
 
 	if (command->argv[0] && command->argv[0][0] == '$')
 	{
@@ -28,10 +28,11 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 			vars = data->local_env;
 			while (vars)
 			{
-				if (!ft_memcmp(command->argv[0] + 1, vars->name, ft_strlen(vars->name)))
+				if (!ft_memcmp(command->argv[0] + 1, vars->name,
+						ft_strlen(vars->name)))
 				{
 					expanded_cmd = vars->value;
-					break;
+					break ;
 				}
 				vars = vars->next;
 			}
@@ -42,7 +43,6 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 			command->argv[0] = ft_strdup(expanded_cmd);
 		}
 	}
-
 	current_path_split = path_split;
 	while (*current_path_split)
 	{
@@ -56,7 +56,8 @@ void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
 		current_path_split++;
 	}
 	free_double(path_split);
-	if (!ft_strncmp(command->argv[0], ">>", ft_strlen(command->argv[0])) || !ft_strncmp(command->argv[0], ">", ft_strlen(command->argv[0])))
+	if (!ft_strncmp(command->argv[0], ">>", ft_strlen(command->argv[0]))
+		|| !ft_strncmp(command->argv[0], ">", ft_strlen(command->argv[0])))
 	{
 		store_exit_status(0);
 		return ;
@@ -154,6 +155,5 @@ t_com	*parse_input(char *str)
 	}
 	if (current_cmd)
 		current_cmd->is_builtin = is_command_builtin(current_cmd);
-	//free_tokens(tokens);
 	return (commands);
 }

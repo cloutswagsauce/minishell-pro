@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals_extra.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 21:40:56 by iduric            #+#    #+#             */
+/*   Updated: 2025/02/26 22:02:45 by iduric           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
- void	handle_interactive(int sig)
+void	handle_interactive(int sig)
 {
 	g_exit_status = sig + 128;
 	write(1, "\n", 1);
@@ -9,14 +21,14 @@
 	rl_redisplay();
 }
 
- void	handle_non_interactive(int sig)
+void	handle_non_interactive(int sig)
 {
 	g_exit_status = sig + 128;
 	if (sig == SIGINT)
 		write(1, "\n", 1);
 }
 
- void	ignore_sigquit(void)
+void	ignore_sigquit(void)
 {
 	struct sigaction	act;
 

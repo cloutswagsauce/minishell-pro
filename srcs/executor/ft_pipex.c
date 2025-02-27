@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pipex.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 09:34:58 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/24 20:52:15 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/26 21:57:42 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,31 +61,31 @@ void	check_if_failed(t_com *cmd, int *pipe_fd)
 		}
 	}
 }
-void execute_pipeline(t_com *commands, t_data *data)
-{
-    int pipe_fd[2];
-    int fd_in;
-    pid_t pid;
-    t_com *cmd;
-    int status;
 
-    fd_in = 0;
-    cmd = commands;
-    while (cmd)
-    {
-        check_if_failed(cmd, pipe_fd);
-        pid = fork();
-        if (pid == -1)
-        {
-            perror("fork failed");
-            exit(1);
-        }
-        else if (pid == 0)
-            child_pipe_process(cmd, fd_in, pipe_fd, data);
-        parent_pipe_process(cmd, &fd_in, pipe_fd);
-        cmd = cmd->next;
-    }
-    while (waitpid(-1, &status, 0) > 0)
-        store_exit_status(status);
-   // free_commands(commands); // Free after execution
+void	execute_pipeline(t_com *commands, t_data *data)
+{
+	int		pipe_fd[2];
+	int		fd_in;
+	pid_t	pid;
+	t_com	*cmd;
+	int		status;
+
+	fd_in = 0;
+	cmd = commands;
+	while (cmd)
+	{
+		check_if_failed(cmd, pipe_fd);
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork failed");
+			exit(1);
+		}
+		else if (pid == 0)
+			child_pipe_process(cmd, fd_in, pipe_fd, data);
+		parent_pipe_process(cmd, &fd_in, pipe_fd);
+		cmd = cmd->next;
+	}
+	while (waitpid(-1, &status, 0) > 0)
+		store_exit_status(status);
 }

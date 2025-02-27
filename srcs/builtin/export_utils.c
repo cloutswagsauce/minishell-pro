@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 21:50:04 by iduric            #+#    #+#             */
+/*   Updated: 2025/02/27 00:12:13 by iduric           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../minishell.h"
 
@@ -8,7 +18,6 @@ int	set_variable(char **name_and_value, char *equals, t_data *data, t_com *cmd)
 	char	*value;
 	t_list	*new;
 
-
 	name = get_name((*(name_and_value + 1)), equals);
 	value = get_value(equals);
 	if (!value && (cmd->d_quote || cmd->s_quote))
@@ -16,17 +25,9 @@ int	set_variable(char **name_and_value, char *equals, t_data *data, t_com *cmd)
 	if (!value)
 		return (1);
 	if (update_var(name, value, &data->local_env))
-	{
-		free(name);
-		free(value);
-		return (0);
-	}
-		
+		return (free_name_and_value(name, value));
 	if (!name)
-	{
-		free(name);
 		return (1);
-	}
 	new = ft_lstnew(name, value);
 	free(name);
 	if (!(cmd->d_quote) && !(cmd->s_quote))
@@ -76,7 +77,7 @@ void	handle_no_args(t_data *data)
 	temp_env = data->envp;
 	while (temp_env)
 	{
-		ft_printf("declare -x %s = %s\n", temp_env->name,temp_env->value);
+		ft_printf("declare -x %s = %s\n", temp_env->name, temp_env->value);
 		temp_env = temp_env->next;
 	}
 	print_local(data);
@@ -87,7 +88,6 @@ int	handle_both_cases(char *equals, char **name_and_value, t_com *cmd,
 {
 	char	*name;
 	t_list	*new;
-
 
 	if (equals)
 	{

@@ -1,11 +1,21 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/26 21:40:02 by iduric            #+#    #+#             */
+/*   Updated: 2025/02/26 22:00:53 by iduric           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../minishell.h"
 
 char	**get_builtin_list(void)
 {
 	static char	*builtin_list[] = {"echo", "cd", "pwd", "export", "unset",
-			"env", "exit", NULL};
+		"env", "exit", NULL};
 
 	return ((char **)builtin_list);
 }

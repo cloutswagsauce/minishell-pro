@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens_helper.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:32:02 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/26 19:04:52 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 01:35:50 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	handle_pipe(char *input, int *i, t_token **tokens)
 	t_token	*temp;
 
 	if (input[*i + 1] == '|')
-		return error_token_parsing(tokens);
+		return (error_token_parsing(tokens));
 	pipe_token = new_token("|", TOKEN_PIPE, 0);
 	if (pipe_token)
 	{
@@ -64,7 +64,7 @@ int	handle_quotes(char *input, int *i, t_token **tokens)
 		(*i)++;
 	if (!input[*i])
 	{
-		ft_printf("you forgot to close the damn quote!\n");
+		ft_printf("you learn bash from gpt?? know your quotes dumbass\n");
 		return (0);
 	}
 	buf = ft_substr(input, start, *i - start);
@@ -74,9 +74,7 @@ int	handle_quotes(char *input, int *i, t_token **tokens)
 		add_token(tokens, buf, TOKEN_SQUOTES, 1);
 	else
 		add_token(tokens, buf, TOKEN_DQUOTES, 1);
-	(*i)++;
-	
-	if (input[*i] && (input[*i] == '"' || input[*i] == '\''))
+	if (input[++(*i)] && (input[*i] == '"' || input[*i] == '\''))
 		return (handle_quotes(input, i, tokens));
 	return (1);
 }

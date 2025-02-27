@@ -6,7 +6,7 @@
 /*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:34:10 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/25 20:34:14 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/26 21:59:59 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int	create_cmd_path(int *len, char **current_path_split, t_com *cmd,
 void	execute_command_from_path(char *exec_path, char **path_split,
 		t_com *command, t_data *data)
 {
-	pid_t pid;
-	int status;
+	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)

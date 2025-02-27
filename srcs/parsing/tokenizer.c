@@ -6,7 +6,7 @@
 /*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:34:49 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/25 20:36:52 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/26 21:40:51 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	process_next_char(char *input, int *i, t_token **tokens, char **buf)
 	else if (input[*i] == '|' || input[*i] == '<' || input[*i] == '>')
 	{
 		handle_operators(input, i, tokens);
-		if (*tokens == NULL)  // Check if tokens were cleared due to syntax error
+		if (*tokens == NULL)
 			return (0);
 	}
 	else

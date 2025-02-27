@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:15:53 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/25 20:14:25 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/26 22:02:06 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	num_commands(char **str)
 		i++;
 	return (i);
 }
+
 t_com	*malloc_commands(char **str)
 {
 	t_com	*commands;
@@ -53,11 +54,11 @@ void	free_double(char **arr)
 	free(arr);
 }
 
-void ft_lstdelone(t_list *lst, void (*del)(void *))
+void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-    if (!lst)
-        return ;
-    if (del)
-        del(lst);
-    free(lst);
+	if (!lst)
+		return ;
+	if (del)
+		del(lst);
+	free(lst);
 }

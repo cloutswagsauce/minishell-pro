@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
+/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 09:53:11 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/26 19:05:47 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 00:23:23 by iduric           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,12 @@ void				handle_word_tokens(t_com **commands, t_com **current_cmd, t_token *token
 void				handle_pipe(char *input, int *i, t_token **tokens);
 int					is_operator_start(char *input, int *i);
 void				error_token_parsing(t_token **tokens);
+int					free_name_and_value(char *name, char *value);
+int					handle_word_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
+int					handle_pipe_syntax_error(t_com **commands);
+int					handle_pipe_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
+int					handle_redirect_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
+int					handle_heredoc_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
 
 
 
