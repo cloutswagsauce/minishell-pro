@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:34:39 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/27 01:25:15 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 15:09:14 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ t_token	*create_redirect_it_token(char *input, int *i, t_token **tokens)
 void	append_token_to_list(t_token **tokens, t_token *token)
 {
 	t_token	*temp;
+
+	printf("was this called\n");
 
 	if (!token)
 		return ;

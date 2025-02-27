@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens_part_II.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 23:59:00 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/27 00:18:31 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 15:40:29 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,31 +73,31 @@ int	handle_pipe_token(t_com **current_cmd, int *arg_count)
 	return (0);
 }
 
-int	handle_redirect_token(t_com *current_cmd, t_token **cur_token, int append)
+int handle_redirect_token(t_com *current_cmd, t_token **cur_token, int append)
 {
-	t_token	*current;
-	t_token	*next;
+    t_token *current;
+    t_token *next;
+    t_token *to_free;
 
 	current = *cur_token;
-	if (!current)
-		return (1);
 	next = current->next;
-	if (!next)
-	{
-		printf("file not provided\n");
-		if (current_cmd)
-			free_commands(current_cmd);
-		free_tokens(*cur_token);
-		store_exit_status(127);
-		return (1);
-	}
-	if (current_cmd->output_file)
-		free(current_cmd->output_file);
-	current_cmd->output_file = ft_strdup(next->value);
-	if (append)
-		current_cmd->append_output = 1;
-	*cur_token = next->next;
-	return (0);
+    if (!next)
+    {
+        if (current_cmd)
+            free_commands(current_cmd);
+        free_tokens(*cur_token);
+        store_exit_status(127);
+        return (1);
+    }
+    if (current_cmd->output_file)
+        free(current_cmd->output_file);
+    current_cmd->output_file = ft_strdup(next->value);
+    if (append)
+        current_cmd->append_output = 1;
+    to_free = next;
+    *cur_token = next->next;
+    free_single_token(to_free);
+    return (0); 
 }
 
 int	handle_heredoc_token(t_com *current_cmd, t_token *cur_token)

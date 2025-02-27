@@ -6,7 +6,7 @@
 /*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:59:34 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/27 14:09:37 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 15:41:36 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ t_com	*parse_input(char *str)
 		printf("treating token: %s\n", cur_token->value);
 		if (token_dispatcher(&commands, &current_cmd, &cur_token, &arg_count))
 			return (0);
+
 	}
 	if (current_cmd)
 		current_cmd->is_builtin = is_command_builtin(current_cmd);

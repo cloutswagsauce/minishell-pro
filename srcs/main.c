@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 10:24:57 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/26 21:42:43 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 15:03:14 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		g_exit_status = 0;
 
 void	call_child_action(t_com command, t_data *data)
 {
+	printf("where the magic happens");
 	if (!ft_strncmp(command.argv[0], "<<", ft_strlen(command.argv[0])))
 		exit(0);
 	path_split_append(&command, data);

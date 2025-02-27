@@ -6,7 +6,7 @@
 /*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:32:16 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/27 14:47:28 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 15:39:20 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,13 +69,11 @@ int	handle_pipe_case(t_com **commands, t_com **current_cmd, t_token **tokens,
 int	handle_redirect_case(t_com **commands, t_com **current_cmd,
 		t_token **tokens, int *arg_count)
 {
-	printf("yesirrrr");
 	t_token	*current;
 	t_token	*to_free;
 	int		ret;
 
 	current = *tokens;
-	ret = 0;
 	if (!*current_cmd)
 	{
 		create_new_command(current_cmd, arg_count, current);
@@ -84,12 +82,15 @@ int	handle_redirect_case(t_com **commands, t_com **current_cmd,
 	}
 	ret = handle_redirect_token(*current_cmd, tokens,
 			(current->type == TOKEN_APPEND));
-	if (!ret)
+	if (ret)
 	{
 		to_free = current;
 		free_single_token(to_free);
+		return (1);
 	}
-	return (ret);
+	to_free = current;
+	free_single_token(to_free);
+	return (0);
 }
 
 int	handle_heredoc_case(t_com **commands, t_com **current_cmd, t_token **tokens,

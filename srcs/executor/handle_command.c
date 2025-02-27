@@ -6,7 +6,7 @@
 /*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:04:31 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/27 13:05:02 by lfaria-m         ###   ########.fr       */
+/*   Updated: 2025/02/27 15:04:36 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	execute_builtin_command(t_com *com, t_data *data)
 	int	stdout_fd;
 	int	stdin_fd;
 
+	printf("commanded builtin");
+
 	stdout_fd = dup(STDOUT_FILENO);
 	stdin_fd = dup(STDIN_FILENO);
 	command_has_variable(com, data->local_env);
@@ -57,6 +59,7 @@ void	execute_builtin_command(t_com *com, t_data *data)
 
 void	handle_command(char *exec_path, t_com *command, t_data *data)
 {
+	printf("second magic gathering");
 	command_has_variable(command, data->local_env);
 	if (execve(exec_path, command->argv, env_list_to_envp(data->envp)) == -1)
 	{
