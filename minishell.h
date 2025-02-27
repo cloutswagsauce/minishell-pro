@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 09:53:11 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/27 00:23:23 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 14:31:53 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <signal.h> // For signal, sigaction, sigemptyset, sigaddset, kill
 # include "libft.h"
 # include <ctype.h>
 # include <curses.h> // Often provides termcap functionality
@@ -21,6 +20,7 @@
 # include <fcntl.h>  // For open
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h> // For signal, sigaction, sigemptyset, sigaddset, kill
 # include <stdio.h>
 # include <stdio.h>  // For printf
 # include <stdlib.h> // For malloc, free
@@ -43,7 +43,7 @@
 # define TOKEN_DQUOTES 7
 # define TOKEN_SQUOTES 8
 
-extern int	g_exit_status;
+extern int			g_exit_status;
 
 typedef struct s_com
 {
@@ -99,7 +99,7 @@ int					ft_env(t_data *data);
 int					ft_pwd(void);
 int					ft_export(char **name_and_value, t_com *cmd, t_data *data,
 						int flag);
-int					ft_cd(t_com command);
+int					ft_cd(t_com command, t_data *data);
 int					ft_exit(t_com *cmd, t_data *data);
 t_list				*ft_lstnew(char *name, char *value);
 void				ft_lstdelone(t_list *lst, void (*del)(void *));
@@ -120,10 +120,9 @@ int					is_valid_path(char *exec_path, t_com *command,
 int					handle_redirect_out(t_com *cmd);
 int					handle_pipe_token(t_com **current_cmd, int *arg_count);
 int					handle_redirect_token(t_com *current_cmd,
-							t_token **cur_token,
-							int append);
+						t_token **cur_token, int append);
 int					handle_heredoc_token(t_com *current_cmd,
-							t_token *cur_token);
+						t_token *cur_token);
 int					handle_redirect_heredoc(t_com *cmd);
 int					handle_squotes(t_com *cmd, int pos);
 int					check_if_quotes(t_com *cmd, int nb);
@@ -140,8 +139,10 @@ int					temp_arg_creator(t_com *current_cmd, char **temp_argv,
 int					handle_quotes(char *input, int *i, t_token **tokens);
 void				handle_redirections_in(char *input, int *i,
 						t_token **tokens);
-void				add_token(t_token **tokens, char *value, int type, int owner);
-int					set_variable(char **name_and_value, char *equals, t_data *data, t_com *cmd);
+void				add_token(t_token **tokens, char *value, int type,
+						int owner);
+int					set_variable(char **name_and_value, char *equals,
+						t_data *data, t_com *cmd);
 char				*get_value(char *equals);
 char				*get_name(char *str, char *equal);
 int					update_var(char *name, char *value, t_list **local_env);
@@ -150,9 +151,12 @@ void				signal_handler_non_interactive(void);
 void				signal_handler_heredoc(void);
 void				store_exit_status(int status);
 void				handle_no_args(t_data *data);
-int					handle_both_cases(char *equals, char **name_and_value, t_com *cmd, t_data *data);
-int					create_new_command(t_com **current_cmd, int *arg_count, t_token *cur_token);
-int					set_variable(char **name_and_value, char *equals, t_data *data, t_com *cmd);
+int					handle_both_cases(char *equals, char **name_and_value,
+						t_com *cmd, t_data *data);
+int					create_new_command(t_com **current_cmd, int *arg_count,
+						t_token *cur_token);
+int					set_variable(char **name_and_value, char *equals,
+						t_data *data, t_com *cmd);
 int					set_env(t_list **env_list, char **envp);
 char				**env_list_to_envp(t_list *env_list);
 int					find_path(t_data *data);
@@ -169,11 +173,14 @@ void				finish_execution(t_com *command, char *input, t_data *data);
 void				handle_interactive(int sig);
 void				handle_non_interactive(int sig);
 void				ignore_sigquit(void);
-int					create_cmd_path(int *len, char **current_path_split, t_com *cmd, char **exec_path);
-void				execute_command_from_path(char *exec_path, char **path_split, t_com *command, t_data *data);
+int					create_cmd_path(int *len, char **current_path_split,
+						t_com *cmd, char **exec_path);
+void				execute_command_from_path(char *exec_path,
+						char **path_split, t_com *command, t_data *data);
 char				*handle_word(char *input, int *i);
 t_token				*new_token(char *value, int type, int take_ownership);
-void				add_token(t_token **tokens, char *value, int type, int take_ownership);
+void				add_token(t_token **tokens, char *value, int type,
+						int take_ownership);
 void				free_single_token(t_token *token);
 int					is_operator_start(char *input, int *i);
 void				handle_pipe(char *input, int *i, t_token **tokens);
@@ -183,32 +190,33 @@ void				handle_non_operator(char *input, int *i, t_token **tokens);
 void				handle_operators(char *input, int *i, t_token **tokens);
 void				skip_spaces(char *input, int *i);
 t_token				*get_last_token(t_token *tokens);
-int 				join_quoted_token(char *input, int *i, t_token **tokens, t_token *last);
-int					join_word_token(char *input, int *i, t_token **tokens, t_token *last);
-int					process_operator(char *input, int *i, t_token **tokens, char **buf);
-int					process_quoted_string(char *input, int *i, t_token **tokens, char **buf);
-void				handle_word_tokens(t_com **commands, t_com **current_cmd, t_token *tokens, int *arg_count);
+int					join_quoted_token(char *input, int *i, t_token **tokens,
+						t_token *last);
+int					join_word_token(char *input, int *i, t_token **tokens,
+						t_token *last);
+int					process_operator(char *input, int *i, t_token **tokens,
+						char **buf);
+int					process_quoted_string(char *input, int *i, t_token **tokens,
+						char **buf);
+void				handle_word_tokens(t_com **commands, t_com **current_cmd,
+						t_token *tokens, int *arg_count);
 void				handle_pipe(char *input, int *i, t_token **tokens);
 int					is_operator_start(char *input, int *i);
 void				error_token_parsing(t_token **tokens);
 int					free_name_and_value(char *name, char *value);
-int					handle_word_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
+int					handle_word_case(t_com **commands, t_com **current_cmd,
+						t_token **tokens, int *arg_count);
 int					handle_pipe_syntax_error(t_com **commands);
-int					handle_pipe_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
-int					handle_redirect_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
-int					handle_heredoc_case(t_com **commands, t_com **current_cmd, t_token **tokens, int *arg_count);
-
-
-
-
-
-
-
-
-
-
-
-
-
+int					handle_pipe_case(t_com **commands, t_com **current_cmd,
+						t_token **tokens, int *arg_count);
+int					handle_redirect_case(t_com **commands, t_com **current_cmd,
+						t_token **tokens, int *arg_count);
+int					handle_heredoc_case(t_com **commands, t_com **current_cmd,
+						t_token **tokens, int *arg_count);
+void				expand_command_variable(t_com *command, t_data *data,
+						t_list *vars, char *expanded_cmd);
+void				handle_cmd_not_found(char **path_split, t_com *command);
+void				try_exec_from_path(char **path_split, t_com *command,
+						t_data *data);
 
 #endif

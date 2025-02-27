@@ -3,69 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:59:34 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/27 01:51:20 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 14:09:37 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-void	try_exec_from_path(char **path_split, t_com *command, t_data *data)
-{
-	char	*exec_path;
-	char	**current_path_split;
-	int		len;
-	char	*expanded_cmd;
-	t_list	*vars;
-
-	if (command->argv[0] && command->argv[0][0] == '$')
-	{
-		expanded_cmd = getenv(command->argv[0] + 1);
-		if (!expanded_cmd)
-		{
-			vars = data->local_env;
-			while (vars)
-			{
-				if (!ft_memcmp(command->argv[0] + 1, vars->name,
-						ft_strlen(vars->name)))
-				{
-					expanded_cmd = vars->value;
-					break ;
-				}
-				vars = vars->next;
-			}
-		}
-		if (expanded_cmd)
-		{
-			free(command->argv[0]);
-			command->argv[0] = ft_strdup(expanded_cmd);
-		}
-	}
-	current_path_split = path_split;
-	while (*current_path_split)
-	{
-		create_cmd_path(&len, current_path_split, command, &exec_path);
-		if (access(exec_path, X_OK) == 0)
-		{
-			execute_command_from_path(exec_path, path_split, command, data);
-			return ;
-		}
-		free(exec_path);
-		current_path_split++;
-	}
-	free_double(path_split);
-	if (!ft_strncmp(command->argv[0], ">>", ft_strlen(command->argv[0]))
-		|| !ft_strncmp(command->argv[0], ">", ft_strlen(command->argv[0])))
-	{
-		store_exit_status(0);
-		return ;
-	}
-	ft_putstr_fd("Command not found: ", 2);
-	ft_putendl_fd(command->argv[0], 2);
-	store_exit_status(127);
-}
 
 void	path_split_append(t_com *command, t_data *data)
 {

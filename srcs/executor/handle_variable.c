@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 10:59:13 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/27 01:49:34 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 14:16:45 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,31 @@ int	expand_status(t_com *com, int j)
 	{
 		free(com->argv[j]);
 		com->argv[j] = NULL;
-		com->argv[j] = ft_strdup(ft_itoa(g_exit_status));
+		com->argv[j] = ft_itoa(g_exit_status);
 		return (1);
 	}
 	return (0);
+}
+
+void	handle_expand_status(t_list *vars, t_com *com, int j, char *rest_of_str)
+{
+	char	*new_value;
+
+	while (vars)
+	{
+		if (!ft_memcmp(com->argv[j] + 1, vars->name, ft_strlen(com->argv[j]
+					+ 1)))
+		{
+			new_value = ft_strjoin(vars->value, rest_of_str);
+			free(com->argv[j]);
+			com->argv[j] = new_value;
+			free(rest_of_str);
+			return ;
+		}
+		vars = vars->next;
+	}
+	free(com->argv[j]);
+	com->argv[j] = ft_strjoin("", rest_of_str);
 }
 
 void	expand_variable(t_com *com, int j, t_list *vars)
@@ -42,23 +63,7 @@ void	expand_variable(t_com *com, int j, t_list *vars)
 		com->argv[j] = new_value;
 	}
 	else if (!expand_status(com, j))
-	{
-		while (vars)
-		{
-			if (!ft_memcmp(com->argv[j] + 1, vars->name, ft_strlen(com->argv[j]
-						+ 1)))
-			{
-				new_value = ft_strjoin(vars->value, rest_of_str);
-				free(com->argv[j]);
-				com->argv[j] = new_value;
-				free(rest_of_str);
-				return ;
-			}
-			vars = vars->next;
-		}
-		free(com->argv[j]);
-		com->argv[j] = ft_strjoin("", rest_of_str);
-	}
+		handle_expand_status(vars, com, j, rest_of_str);
 	free(rest_of_str);
 }
 

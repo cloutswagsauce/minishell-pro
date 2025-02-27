@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:04:31 by lfaria-m          #+#    #+#             */
-/*   Updated: 2025/02/26 21:38:23 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 13:05:02 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	builtin_caller(t_com *com, t_data *data)
 	else if (!ft_strncmp(com->argv[0], "pwd", ft_strlen(com->argv[0])))
 		return (ft_pwd());
 	else if (!ft_strncmp(com->argv[0], "cd", ft_strlen(com->argv[0])))
-		return (ft_cd(*com));
+		return (ft_cd(*com, data));
 	else if (!ft_strncmp(com->argv[0], "export", ft_strlen(com->argv[0])))
 	{
 		if (com->argv[1])

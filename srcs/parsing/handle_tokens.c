@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_tokens.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iduric <iduric@student.42.fr>              +#+  +:+       +#+        */
+/*   By: lfaria-m <lfaria-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 20:32:16 by iduric            #+#    #+#             */
-/*   Updated: 2025/02/27 00:22:35 by iduric           ###   ########.fr       */
+/*   Updated: 2025/02/27 14:47:28 by lfaria-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int	handle_pipe_case(t_com **commands, t_com **current_cmd, t_token **tokens,
 int	handle_redirect_case(t_com **commands, t_com **current_cmd,
 		t_token **tokens, int *arg_count)
 {
+	printf("yesirrrr");
 	t_token	*current;
 	t_token	*to_free;
 	int		ret;
